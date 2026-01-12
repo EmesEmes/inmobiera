@@ -1,18 +1,19 @@
-// app/page.js
+// app/propiedades/page.js
 import Navbar from '@/components/Navbar'
-import Hero from '@/components/Hero'
-import PropiedadesDestacadas from '@/components/PropiedadesDestacadas'
-import QuienesSomos from '@/components/QuienesSomos'
 import TodasPropiedades from '@/components/TodasPropiedades'
 
-export default function Home() {
+export const metadata = {
+  title: 'Propiedades en Venta - InmoEcuador',
+  description: 'Explora todas nuestras propiedades disponibles en Quito y sus valles',
+}
+
+export default function PropiedadesPage() {
   return (
     <main>
       <Navbar />
-      <Hero />
-      <PropiedadesDestacadas />
-      <QuienesSomos />
-      <TodasPropiedades />
+      <div className="pt-8">
+        <TodasPropiedades />
+      </div>
       
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-8">
