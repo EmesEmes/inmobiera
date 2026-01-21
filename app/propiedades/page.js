@@ -1,18 +1,18 @@
 // app/propiedades/page.js
+'use client'
+import { useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import TodasPropiedades from '@/components/TodasPropiedades'
 
-export const metadata = {
-  title: 'Propiedades en Venta - InmoEcuador',
-  description: 'Explora todas nuestras propiedades disponibles en Quito y sus valles',
-}
-
 export default function PropiedadesPage() {
+  const searchParams = useSearchParams()
+
   return (
     <main>
       <Navbar />
       <div className="pt-8">
-        <TodasPropiedades />
+        <TodasPropiedades searchParams={searchParams} />
       </div>
       
       {/* Footer */}

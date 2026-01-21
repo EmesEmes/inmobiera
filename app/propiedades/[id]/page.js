@@ -10,6 +10,7 @@ import {
   MapPin, Bed, Bath, Car, Maximize, Calendar, Home, 
   MessageCircle, ArrowLeft, Loader2, CheckCircle2 
 } from 'lucide-react'
+import MapaPropiedad from '@/components/MapaPropiedad'
 
 export default function PropiedadDetalle() {
   const params = useParams()
@@ -274,7 +275,27 @@ export default function PropiedadDetalle() {
                 </div>
               </div>
             )}
+            {propiedad.latitude && propiedad.longitude && (
+  <div className="bg-white rounded-lg shadow-md p-6">
+    <h2 className="text-xl font-bold text-gray-900 mb-4">
+      Ubicación
+    </h2>
+    <MapaPropiedad
+      latitude={propiedad.latitude}
+      longitude={propiedad.longitude}
+      titulo={propiedad.titulo}
+    />
+    <p className="text-sm text-gray-500 mt-3">
+      {propiedad.mostrar_direccion 
+        ? propiedad.direccion 
+        : `Sector: ${propiedad.sector}`}
+    </p>
+  </div>
+)}
           </div>
+
+          {/* Mapa de Ubicación */}
+
 
           {/* Sidebar - Contacto */}
           <div className="lg:col-span-1">

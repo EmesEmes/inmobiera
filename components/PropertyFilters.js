@@ -1,8 +1,8 @@
 // components/PropertyFilters.js
 'use client'
-import { Search, SlidersHorizontal } from 'lucide-react'
+import { Search, SlidersHorizontal, X } from 'lucide-react'
 
-export default function PropertyFilters({ filters, setFilters, onSearch }) {
+export default function PropertyFilters({ filters, setFilters, onSearch, onReset }) {
   const sectores = [
     { value: '', label: 'Todos los sectores' },
     { value: 'norte', label: 'Norte' },
@@ -22,30 +22,25 @@ export default function PropertyFilters({ filters, setFilters, onSearch }) {
     { value: 'local', label: 'Local Comercial' },
   ]
 
-  const rangosPrecios = [
-    { value: '', label: 'Cualquier precio' },
-    { value: '0-50000', label: 'Hasta $50,000' },
-    { value: '50000-100000', label: '$50,000 - $100,000' },
-    { value: '100000-200000', label: '$100,000 - $200,000' },
-    { value: '200000-300000', label: '$200,000 - $300,000' },
-    { value: '300000-500000', label: '$300,000 - $500,000' },
-    { value: '500000-99999999', label: 'Más de $500,000' },
-  ]
-
-  const rangosArea = [
-    { value: '', label: 'Cualquier área' },
-    { value: '0-50', label: 'Hasta 50 m²' },
-    { value: '50-100', label: '50 - 100 m²' },
-    { value: '100-200', label: '100 - 200 m²' },
-    { value: '200-300', label: '200 - 300 m²' },
-    { value: '300-99999', label: 'Más de 300 m²' },
-  ]
-
   const handleChange = (field, value) => {
     setFilters(prev => ({
       ...prev,
       [field]: value
     }))
+  }
+
+  const handleReset = () => {
+    setFilters({
+      sector: '',
+      tipo_inmueble: '',
+      precioMin: '',
+      precioMax: '',
+      areaMin: '',
+      areaMax: ''
+    })
+    if (onReset) {
+      onReset()
+    }
   }
 
   return (
@@ -55,7 +50,7 @@ export default function PropertyFilters({ filters, setFilters, onSearch }) {
         <h3 className="text-xl font-bold text-gray-900">Filtrar Propiedades</h3>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* Sector */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -92,51 +87,79 @@ export default function PropertyFilters({ filters, setFilters, onSearch }) {
           </select>
         </div>
 
-        {/* Rango de Precio */}
+        {/* Precio Mínimo */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Precio
+            Precio Mínimo (USD)
           </label>
-          <select
-            value={filters.precio}
-            onChange={(e) => handleChange('precio', e.target.value)}
+          <input
+            type="number"
+            value={filters.precioMin}
+            onChange={(e) => handleChange('precioMin', e.target.value)}
+            placeholder="Ej: 50000"
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-          >
-            {rangosPrecios.map(rango => (
-              <option key={rango.value} value={rango.value}>
-                {rango.label}
-              </option>
-            ))}
-          </select>
+          />
         </div>
 
-        {/* Área */}
+        {/* Precio Máximo */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Área
+            Precio Máximo (USD)
           </label>
-          <select
-            value={filters.area}
-            onChange={(e) => handleChange('area', e.target.value)}
+          <input
+            type="number"
+            value={filters.precioMax}
+            onChange={(e) => handleChange('precioMax', e.target.value)}
+            placeholder="Ej: 200000"
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-          >
-            {rangosArea.map(rango => (
-              <option key={rango.value} value={rango.value}>
-                {rango.label}
-              </option>
-            ))}
-          </select>
+          />
+        </div>
+
+        {/* Área Mínima */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Área Mínima (m²)
+          </label>
+          <input
+            type="number"
+            value={filters.areaMin}
+            onChange={(e) => handleChange('areaMin', e.target.value)}
+            placeholder="Ej: 50"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+          />
+        </div>
+
+        {/* Área Máxima */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Área Máxima (m²)
+          </label>
+          <input
+            type="number"
+            value={filters.areaMax}
+            onChange={(e) => handleChange('areaMax', e.target.value)}
+            placeholder="Ej: 300"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+          />
         </div>
       </div>
 
-      {/* Botón de búsqueda */}
-      <div className="mt-6">
+      {/* Botones */}
+      <div className="mt-6 flex gap-4">
         <button
           onClick={onSearch}
-          className="w-full md:w-auto bg-primary-600 text-white px-8 py-3 rounded-lg hover:bg-primary-700 transition font-semibold flex items-center justify-center gap-2"
+          className="flex-1 md:flex-none bg-primary-600 text-white px-8 py-3 rounded-lg hover:bg-primary-700 transition font-semibold flex items-center justify-center gap-2"
         >
           <Search className="h-5 w-5" />
           Buscar Propiedades
+        </button>
+
+        <button
+          onClick={handleReset}
+          className="flex-1 md:flex-none bg-gray-200 text-gray-700 px-8 py-3 rounded-lg hover:bg-gray-300 transition font-semibold flex items-center justify-center gap-2"
+        >
+          <X className="h-5 w-5" />
+          Limpiar Filtros
         </button>
       </div>
     </div>

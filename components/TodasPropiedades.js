@@ -1,25 +1,88 @@
 // components/TodasPropiedades.js
 'use client'
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
+import { useRouter, useSearchParams, usePathname } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import PropertyCard from './PropertyCard'
 import PropertyFilters from './PropertyFilters'
 import { Loader2, ChevronLeft, ChevronRight } from 'lucide-react'
 
-export default function TodasPropiedades() {
+export default function TodasPropiedades({ searchParams: initialSearchParams }) {
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const hasInitialized = useRef(false)
+  
   const [propiedades, setPropiedades] = useState([])
   const [loading, setLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
+  
+  // Filtros activos (los que están en la URL y se usan para buscar)
+  const [activeFilters, setActiveFilters] = useState({
+    sector: '',
+    tipo_inmueble: '',
+    precioMin: '',
+    precioMax: '',
+    areaMin: '',
+    areaMax: ''
+  })
+  
+  // Filtros del formulario (los que el usuario está editando)
   const [filters, setFilters] = useState({
     sector: '',
     tipo_inmueble: '',
-    precio: '',
-    area: ''
+    precioMin: '',
+    precioMax: '',
+    areaMin: '',
+    areaMax: ''
   })
   
   const itemsPerPage = 9
 
+  // Cargar filtros y página desde query params al inicio (SOLO UNA VEZ)
+  useEffect(() => {
+    if (hasInitialized.current) return
+    hasInitialized.current = true
+    
+    const params = initialSearchParams || searchParams
+    if (params) {
+      const filtersFromURL = {
+        sector: params.get('sector') || '',
+        tipo_inmueble: params.get('tipo_inmueble') || '',
+        precioMin: params.get('precioMin') || '',
+        precioMax: params.get('precioMax') || '',
+        areaMin: params.get('areaMin') || '',
+        areaMax: params.get('areaMax') || ''
+      }
+      
+      setFilters(filtersFromURL)
+      setActiveFilters(filtersFromURL)
+      
+      const page = parseInt(params.get('page') || '1')
+      setCurrentPage(page)
+    }
+  }, [initialSearchParams, searchParams])
+
+  // Actualizar URL con query params
+  const updateURL = useCallback((newFilters, newPage) => {
+    const params = new URLSearchParams()
+    
+    if (newFilters.sector) params.set('sector', newFilters.sector)
+    if (newFilters.tipo_inmueble) params.set('tipo_inmueble', newFilters.tipo_inmueble)
+    if (newFilters.precioMin) params.set('precioMin', newFilters.precioMin)
+    if (newFilters.precioMax) params.set('precioMax', newFilters.precioMax)
+    if (newFilters.areaMin) params.set('areaMin', newFilters.areaMin)
+    if (newFilters.areaMax) params.set('areaMax', newFilters.areaMax)
+    if (newPage > 1) params.set('page', newPage.toString())
+    
+    const queryString = params.toString()
+    const newURL = queryString ? `${pathname}?${queryString}` : pathname
+    
+    router.push(newURL, { scroll: false })
+  }, [pathname, router])
+
+  // Fetch solo usa activeFilters (no filters)
   const fetchPropiedades = useCallback(async () => {
     setLoading(true)
     try {
@@ -27,23 +90,29 @@ export default function TodasPropiedades() {
         .from('propiedades')
         .select('*', { count: 'exact' })
 
-      // Aplicar filtros
-      if (filters.sector) {
-        query = query.eq('sector', filters.sector)
+      // Aplicar filtros ACTIVOS
+      if (activeFilters.sector) {
+        query = query.eq('sector', activeFilters.sector)
       }
 
-      if (filters.tipo_inmueble) {
-        query = query.eq('tipo_inmueble', filters.tipo_inmueble)
+      if (activeFilters.tipo_inmueble) {
+        query = query.eq('tipo_inmueble', activeFilters.tipo_inmueble)
       }
 
-      if (filters.precio) {
-        const [min, max] = filters.precio.split('-').map(Number)
-        query = query.gte('precio', min).lte('precio', max)
+      // Precio
+      if (activeFilters.precioMin) {
+        query = query.gte('precio', parseFloat(activeFilters.precioMin))
+      }
+      if (activeFilters.precioMax) {
+        query = query.lte('precio', parseFloat(activeFilters.precioMax))
       }
 
-      if (filters.area) {
-        const [min, max] = filters.area.split('-').map(Number)
-        query = query.gte('area_total', min).lte('area_total', max)
+      // Área
+      if (activeFilters.areaMin) {
+        query = query.gte('area_total', parseFloat(activeFilters.areaMin))
+      }
+      if (activeFilters.areaMax) {
+        query = query.lte('area_total', parseFloat(activeFilters.areaMax))
       }
 
       // Paginación
@@ -63,19 +132,41 @@ export default function TodasPropiedades() {
     } finally {
       setLoading(false)
     }
-  }, [currentPage, filters])
+  }, [currentPage, activeFilters])
 
+  // Solo fetch cuando cambian activeFilters o currentPage
   useEffect(() => {
     fetchPropiedades()
   }, [fetchPropiedades])
 
+  // Cuando presionan "Buscar"
   const handleSearch = () => {
+    setActiveFilters(filters) // Activar los filtros del formulario
     setCurrentPage(1)
-    fetchPropiedades()
+    updateURL(filters, 1)
   }
 
+  // Función para resetear filtros
+  const handleReset = () => {
+    const emptyFilters = {
+      sector: '',
+      tipo_inmueble: '',
+      precioMin: '',
+      precioMax: '',
+      areaMin: '',
+      areaMax: ''
+    }
+    
+    setFilters(emptyFilters)
+    setActiveFilters(emptyFilters)
+    setCurrentPage(1)
+    updateURL(emptyFilters, 1)
+  }
+
+  // Cuando cambian de página
   const goToPage = (page) => {
     setCurrentPage(page)
+    updateURL(activeFilters, page) // Usar activeFilters, no filters
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
@@ -96,6 +187,7 @@ export default function TodasPropiedades() {
           filters={filters}
           setFilters={setFilters}
           onSearch={handleSearch}
+          onReset={handleReset}
         />
 
         {/* Propiedades */}

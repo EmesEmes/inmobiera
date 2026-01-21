@@ -1,4 +1,3 @@
-// components/PropertyCard.js
 'use client'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -16,11 +15,12 @@ export default function PropertyCard({ propiedad }) {
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
       {/* Imagen */}
-      <div className="relative h-64 w-full">
+      <div className="relative h-64 w-full overflow-hidden">
         <img
           src={imagenPrincipal}
           alt={propiedad.titulo}
           className="object-cover"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
         {propiedad.destacado && (
           <div className="absolute top-4 right-4 bg-primary-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
@@ -35,46 +35,54 @@ export default function PropertyCard({ propiedad }) {
       {/* Contenido */}
       <div className="p-6">
         <div className="flex items-center text-gray-600 text-sm mb-2">
-          <MapPin className="h-4 w-4 mr-1" />
+          <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
           <span className="capitalize">{propiedad.sector}</span>
         </div>
         
-        <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2">
+        <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2 min-h-[3.5rem]">
           {propiedad.titulo}
         </h3>
         
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+        <p className="text-gray-600 text-sm mb-4 line-clamp-2 min-h-[2.5rem]">
           {propiedad.descripcion}
         </p>
         
         {/* Características */}
         <div className="flex items-center justify-between text-gray-700 mb-6 pb-6 border-b">
-          {propiedad.habitaciones && (
+          {propiedad.habitaciones ? (
             <div className="flex items-center space-x-1">
-              <Bed className="h-5 w-5 text-primary-600" />
+              <Bed className="h-5 w-5 text-primary-600 flex-shrink-0" />
               <span className="text-sm">{propiedad.habitaciones}</span>
             </div>
+          ) : (
+            <div className="w-8"></div>
           )}
           
-          {propiedad.banios && (
+          {propiedad.banios ? (
             <div className="flex items-center space-x-1">
-              <Bath className="h-5 w-5 text-primary-600" />
+              <Bath className="h-5 w-5 text-primary-600 flex-shrink-0" />
               <span className="text-sm">{propiedad.banios}</span>
             </div>
+          ) : (
+            <div className="w-8"></div>
           )}
           
-          {propiedad.parqueaderos && (
+          {propiedad.parqueaderos ? (
             <div className="flex items-center space-x-1">
-              <Car className="h-5 w-5 text-primary-600" />
+              <Car className="h-5 w-5 text-primary-600 flex-shrink-0" />
               <span className="text-sm">{propiedad.parqueaderos}</span>
             </div>
+          ) : (
+            <div className="w-8"></div>
           )}
           
-          {propiedad.area_total && (
+          {propiedad.area_total ? (
             <div className="flex items-center space-x-1">
-              <Maximize className="h-5 w-5 text-primary-600" />
+              <Maximize className="h-5 w-5 text-primary-600 flex-shrink-0" />
               <span className="text-sm">{propiedad.area_total}m²</span>
             </div>
+          ) : (
+            <div className="w-8"></div>
           )}
         </div>
         
@@ -91,7 +99,7 @@ export default function PropertyCard({ propiedad }) {
             href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600 transition"
+            className="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600 transition flex items-center justify-center flex-shrink-0"
             title="Contactar por WhatsApp"
           >
             <MessageCircle className="h-6 w-6" />
