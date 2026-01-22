@@ -1,37 +1,13 @@
 // components/PropiedadesDestacadas.js
 'use client'
-import { useEffect, useState } from 'react'
-import { supabase } from '@/lib/supabase'
+import { usePropiedadesDestacadas } from '@/lib/queries'
 import PropertyCard from './PropertyCard'
 import { Loader2 } from 'lucide-react'
 
 export default function PropiedadesDestacadas() {
-  const [propiedades, setPropiedades] = useState([])
-  const [loading, setLoading] = useState(true)
+  const { data: propiedades = [], isLoading } = usePropiedadesDestacadas()
 
-  useEffect(() => {
-    fetchPropiedadesDestacadas()
-  }, [])
-
-  const fetchPropiedadesDestacadas = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('propiedades')
-        .select('*')
-        .eq('destacado', true)
-        .order('created_at', { ascending: false })
-        .limit(6)
-
-      if (error) throw error
-      setPropiedades(data || [])
-    } catch (error) {
-      console.error('Error fetching propiedades destacadas:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  if (loading) {
+  if (isLoading) {
     return (
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -44,7 +20,7 @@ export default function PropiedadesDestacadas() {
   }
 
   if (propiedades.length === 0) {
-    return null // No mostrar la sección si no hay propiedades destacadas
+    return null
   }
 
   return (

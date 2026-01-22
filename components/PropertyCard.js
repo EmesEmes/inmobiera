@@ -1,9 +1,12 @@
+// components/PropertyCard.js
 'use client'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { Bed, Bath, Car, Maximize, MapPin, MessageCircle } from 'lucide-react'
 
 export default function PropertyCard({ propiedad }) {
+  const searchParams = useSearchParams()
   const whatsappNumber = "593999999999" // Cambia por tu número real
   const whatsappMessage = `Hola, estoy interesado en la propiedad ${propiedad.titulo} - ${propiedad.codigo_propiedad} con precio $${propiedad.precio.toLocaleString()}`
   
@@ -11,6 +14,14 @@ export default function PropertyCard({ propiedad }) {
   const imagenPrincipal = propiedad.imagenes && propiedad.imagenes.length > 0 
     ? propiedad.imagenes[0] 
     : '/placeholder-property.jpg'
+  
+  // Construir URL con query params para mantener el contexto
+  const buildPropertyUrl = () => {
+    const queryString = searchParams.toString()
+    return queryString 
+      ? `/propiedades/${propiedad.id}?from=${encodeURIComponent(`/propiedades?${queryString}`)}`
+      : `/propiedades/${propiedad.id}`
+  }
   
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
@@ -89,11 +100,11 @@ export default function PropertyCard({ propiedad }) {
         {/* Botones */}
         <div className="flex gap-3">
           <Link 
-            href={`/propiedades/${propiedad.id}`}
-            className="flex-1 text-center bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition font-semibold"
-          >
-            Ver más
-          </Link>
+  href={`/propiedades/${propiedad.id}`}
+  className="flex-1 text-center bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition font-semibold"
+>
+  Ver más
+</Link>
           
           <Link
             href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`}

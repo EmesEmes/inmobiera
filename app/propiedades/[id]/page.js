@@ -1,49 +1,30 @@
 // app/propiedades/[id]/page.js
 'use client'
-import { useEffect, useState, useCallback } from 'react'
-import { useParams } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
+import { useState } from 'react'
+import { useParams, useSearchParams, useRouter } from 'next/navigation'
+import { usePropiedad } from '@/lib/queries'
 import Navbar from '@/components/Navbar'
+import MapaPropiedad from '@/components/MapaPropiedad'
 import Image from 'next/image'
 import Link from 'next/link'
 import { 
   MapPin, Bed, Bath, Car, Maximize, Calendar, Home, 
   MessageCircle, ArrowLeft, Loader2, CheckCircle2 
 } from 'lucide-react'
-import MapaPropiedad from '@/components/MapaPropiedad'
 
 export default function PropiedadDetalle() {
   const params = useParams()
-  const [propiedad, setPropiedad] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const router = useRouter()
+  const searchParams = useSearchParams()
   const [imagenActual, setImagenActual] = useState(0)
 
   const whatsappNumber = "593999999999" // Cambia por tu número real
 
-  const fetchPropiedad = useCallback(async () => {
-    try {
-      const { data, error } = await supabase
-        .from('propiedades')
-        .select('*')
-        .eq('id', params.id)
-        .single()
+  const fromUrl = searchParams.get('from') || '/propiedades'
+  // Usar TanStack Query
+  const { data: propiedad, isLoading, error } = usePropiedad(params.id)
 
-      if (error) throw error
-      setPropiedad(data)
-    } catch (error) {
-      console.error('Error fetching propiedad:', error)
-    } finally {
-      setLoading(false)
-    }
-  }, [params.id])
-
-  useEffect(() => {
-    if (params.id) {
-      fetchPropiedad()
-    }
-  }, [params.id, fetchPropiedad])
-
-  if (loading) {
+  if (isLoading) {
     return (
       <main>
         <Navbar />
@@ -54,7 +35,7 @@ export default function PropiedadDetalle() {
     )
   }
 
-  if (!propiedad) {
+  if (error || !propiedad) {
     return (
       <main>
         <Navbar />
@@ -63,9 +44,10 @@ export default function PropiedadDetalle() {
             Propiedad no encontrada
           </h1>
           <Link 
-            href="/propiedades"
-            className="text-primary-600 hover:text-primary-700 font-semibold"
+            href={fromUrl}
+            className="flex items-center text-primary-600 hover:text-primary-700 font-semibold"
           >
+            <ArrowLeft className="h-5 w-5 mr-2" />
             Volver a propiedades
           </Link>
         </div>
@@ -82,13 +64,13 @@ export default function PropiedadDetalle() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumb */}
         <div className="mb-6">
-          <Link 
-            href="/propiedades"
+          <button
+            onClick={() => router.back()}
             className="flex items-center text-primary-600 hover:text-primary-700 font-semibold"
           >
             <ArrowLeft className="h-5 w-5 mr-2" />
             Volver a propiedades
-          </Link>
+          </button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -97,13 +79,12 @@ export default function PropiedadDetalle() {
             {/* Galería de Imágenes */}
             <div className="mb-8">
               {/* Imagen Principal */}
-              <div className="relative h-96 md:h-125 rounded-lg overflow-hidden mb-4">
+              <div className="relative h-96 md:h-[500px] rounded-lg overflow-hidden mb-4">
                 <img
                   src={propiedad.imagenes && propiedad.imagenes[imagenActual] 
                     ? propiedad.imagenes[imagenActual] 
                     : '/placeholder-property.jpg'}
                   alt={propiedad.titulo}
-                  
                   className="object-cover"
                 />
               </div>
@@ -124,7 +105,6 @@ export default function PropiedadDetalle() {
                       <img
                         src={imagen}
                         alt={`${propiedad.titulo} - ${index + 1}`}
-                        
                         className="object-cover"
                       />
                     </button>
@@ -261,7 +241,7 @@ export default function PropiedadDetalle() {
 
             {/* Amenidades */}
             {propiedad.amenidades && propiedad.amenidades.length > 0 && (
-              <div className="bg-white rounded-lg shadow-md p-6">
+              <div className="bg-white rounded-lg shadow-md p-6 mb-6">
                 <h2 className="text-xl font-bold text-gray-900 mb-4">
                   Amenidades
                 </h2>
@@ -275,27 +255,26 @@ export default function PropiedadDetalle() {
                 </div>
               </div>
             )}
+
+            {/* Mapa de Ubicación */}
             {propiedad.latitude && propiedad.longitude && (
-  <div className="bg-white rounded-lg shadow-md p-6">
-    <h2 className="text-xl font-bold text-gray-900 mb-4">
-      Ubicación
-    </h2>
-    <MapaPropiedad
-      latitude={propiedad.latitude}
-      longitude={propiedad.longitude}
-      titulo={propiedad.titulo}
-    />
-    <p className="text-sm text-gray-500 mt-3">
-      {propiedad.mostrar_direccion 
-        ? propiedad.direccion 
-        : `Sector: ${propiedad.sector}`}
-    </p>
-  </div>
-)}
+              <div className="bg-white rounded-lg shadow-md p-6">
+                <h2 className="text-xl font-bold text-gray-900 mb-4">
+                  Ubicación
+                </h2>
+                <MapaPropiedad
+                  latitude={propiedad.latitude}
+                  longitude={propiedad.longitude}
+                  titulo={propiedad.titulo}
+                />
+                <p className="text-sm text-gray-500 mt-3">
+                  {propiedad.mostrar_direccion 
+                    ? propiedad.direccion 
+                    : `Sector: ${propiedad.sector}`}
+                </p>
+              </div>
+            )}
           </div>
-
-          {/* Mapa de Ubicación */}
-
 
           {/* Sidebar - Contacto */}
           <div className="lg:col-span-1">
@@ -308,7 +287,7 @@ export default function PropiedadDetalle() {
                 Contáctanos por WhatsApp para más información y para agendar una visita.
               </p>
 
-              <Link
+              <a
                 href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -316,7 +295,7 @@ export default function PropiedadDetalle() {
               >
                 <MessageCircle className="h-6 w-6" />
                 Contactar por WhatsApp
-              </Link>
+              </a>
 
               <div className="bg-gray-50 rounded-lg p-4 text-sm text-gray-600">
                 <p className="mb-2">

@@ -1,68 +1,52 @@
 // components/TodasPropiedades.js
 'use client'
-import { useEffect, useState, useCallback, useRef } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useRouter, useSearchParams, usePathname } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
+import { usePropiedades } from '@/lib/queries'
 import PropertyCard from './PropertyCard'
 import PropertyFilters from './PropertyFilters'
 import { Loader2, ChevronLeft, ChevronRight } from 'lucide-react'
+import { useState } from 'react'
 
 export default function TodasPropiedades({ searchParams: initialSearchParams }) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const hasInitialized = useRef(false)
-  
-  const [propiedades, setPropiedades] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
+
+  // Obtener filtros iniciales de los query params
+  const getInitialFilters = () => {
+    const params = initialSearchParams || searchParams
+    return {
+      sector: params?.get('sector') || '',
+      tipo_inmueble: params?.get('tipo_inmueble') || '',
+      precioMin: params?.get('precioMin') || '',
+      precioMax: params?.get('precioMax') || '',
+      areaMin: params?.get('areaMin') || '',
+      areaMax: params?.get('areaMax') || ''
+    }
+  }
+
+  // Obtener página inicial de los query params
+  const getInitialPage = () => {
+    const params = initialSearchParams || searchParams
+    return parseInt(params?.get('page') || '1')
+  }
+
+  const [currentPage, setCurrentPage] = useState(getInitialPage)
   
   // Filtros activos (los que están en la URL y se usan para buscar)
-  const [activeFilters, setActiveFilters] = useState({
-    sector: '',
-    tipo_inmueble: '',
-    precioMin: '',
-    precioMax: '',
-    areaMin: '',
-    areaMax: ''
-  })
+  const [activeFilters, setActiveFilters] = useState(getInitialFilters)
   
   // Filtros del formulario (los que el usuario está editando)
-  const [filters, setFilters] = useState({
-    sector: '',
-    tipo_inmueble: '',
-    precioMin: '',
-    precioMax: '',
-    areaMin: '',
-    areaMax: ''
-  })
+  const [filters, setFilters] = useState(getInitialFilters)
   
   const itemsPerPage = 9
 
-  // Cargar filtros y página desde query params al inicio (SOLO UNA VEZ)
-  useEffect(() => {
-    if (hasInitialized.current) return
-    hasInitialized.current = true
-    
-    const params = initialSearchParams || searchParams
-    if (params) {
-      const filtersFromURL = {
-        sector: params.get('sector') || '',
-        tipo_inmueble: params.get('tipo_inmueble') || '',
-        precioMin: params.get('precioMin') || '',
-        precioMax: params.get('precioMax') || '',
-        areaMin: params.get('areaMin') || '',
-        areaMax: params.get('areaMax') || ''
-      }
-      
-      setFilters(filtersFromURL)
-      setActiveFilters(filtersFromURL)
-      
-      const page = parseInt(params.get('page') || '1')
-      setCurrentPage(page)
-    }
-  }, [initialSearchParams, searchParams])
+  // Usar TanStack Query para obtener propiedades
+  const { data, isLoading, error } = usePropiedades(activeFilters, currentPage, itemsPerPage)
+  
+  const propiedades = data?.propiedades || []
+  const totalPages = data?.totalPages || 1
 
   // Actualizar URL con query params
   const updateURL = useCallback((newFilters, newPage) => {
@@ -82,66 +66,9 @@ export default function TodasPropiedades({ searchParams: initialSearchParams }) 
     router.push(newURL, { scroll: false })
   }, [pathname, router])
 
-  // Fetch solo usa activeFilters (no filters)
-  const fetchPropiedades = useCallback(async () => {
-    setLoading(true)
-    try {
-      let query = supabase
-        .from('propiedades')
-        .select('*', { count: 'exact' })
-
-      // Aplicar filtros ACTIVOS
-      if (activeFilters.sector) {
-        query = query.eq('sector', activeFilters.sector)
-      }
-
-      if (activeFilters.tipo_inmueble) {
-        query = query.eq('tipo_inmueble', activeFilters.tipo_inmueble)
-      }
-
-      // Precio
-      if (activeFilters.precioMin) {
-        query = query.gte('precio', parseFloat(activeFilters.precioMin))
-      }
-      if (activeFilters.precioMax) {
-        query = query.lte('precio', parseFloat(activeFilters.precioMax))
-      }
-
-      // Área
-      if (activeFilters.areaMin) {
-        query = query.gte('area_total', parseFloat(activeFilters.areaMin))
-      }
-      if (activeFilters.areaMax) {
-        query = query.lte('area_total', parseFloat(activeFilters.areaMax))
-      }
-
-      // Paginación
-      const from = (currentPage - 1) * itemsPerPage
-      const to = from + itemsPerPage - 1
-
-      const { data, error, count } = await query
-        .order('created_at', { ascending: false })
-        .range(from, to)
-
-      if (error) throw error
-
-      setPropiedades(data || [])
-      setTotalPages(Math.ceil((count || 0) / itemsPerPage))
-    } catch (error) {
-      console.error('Error fetching propiedades:', error)
-    } finally {
-      setLoading(false)
-    }
-  }, [currentPage, activeFilters])
-
-  // Solo fetch cuando cambian activeFilters o currentPage
-  useEffect(() => {
-    fetchPropiedades()
-  }, [fetchPropiedades])
-
   // Cuando presionan "Buscar"
   const handleSearch = () => {
-    setActiveFilters(filters) // Activar los filtros del formulario
+    setActiveFilters(filters)
     setCurrentPage(1)
     updateURL(filters, 1)
   }
@@ -166,7 +93,7 @@ export default function TodasPropiedades({ searchParams: initialSearchParams }) 
   // Cuando cambian de página
   const goToPage = (page) => {
     setCurrentPage(page)
-    updateURL(activeFilters, page) // Usar activeFilters, no filters
+    updateURL(activeFilters, page)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
@@ -191,9 +118,15 @@ export default function TodasPropiedades({ searchParams: initialSearchParams }) 
         />
 
         {/* Propiedades */}
-        {loading ? (
+        {isLoading ? (
           <div className="flex justify-center items-center py-20">
             <Loader2 className="h-12 w-12 animate-spin text-primary-600" />
+          </div>
+        ) : error ? (
+          <div className="text-center py-20">
+            <p className="text-red-600 text-lg">
+              Error al cargar propiedades. Por favor, intenta de nuevo.
+            </p>
           </div>
         ) : propiedades.length === 0 ? (
           <div className="text-center py-20">
