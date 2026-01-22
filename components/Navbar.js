@@ -24,7 +24,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2" onClick={closeMenu}>
             <Building2 className="h-8 w-8 text-primary-600" />
-            <span className="text-xl font-bold text-primary-900">InmoEcuador</span>
+            <span className="text-xl font-bold text-primary-900">Inmobiera</span>
           </Link>
           
           {/* Desktop Navigation */}

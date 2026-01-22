@@ -48,8 +48,7 @@ export default function LoginPage() {
         <div className="absolute inset-0 bg-black opacity-10"></div>
         <div className="relative z-10">
           <div className="flex items-center space-x-3">
-            <Building2 className="h-10 w-10 text-white" />
-            <span className="text-2xl font-bold text-white">InmoEcuador</span>
+            <span className="text-2xl font-bold text-white">Inmobiera</span>
           </div>
         </div>
         <div className="relative z-10">
@@ -61,7 +60,7 @@ export default function LoginPage() {
           </p>
         </div>
         <div className="relative z-10 text-primary-100 text-sm">
-          © 2025 InmoEcuador. Todos los derechos reservados.
+          © 2025 Inmobiera. Todos los derechos reservados.
         </div>
       </div>
 
