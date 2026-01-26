@@ -23,8 +23,7 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2" onClick={closeMenu}>
-            <Building2 className="h-8 w-8 text-primary-600" />
-            <span className="text-xl font-bold text-primary-900">Inmobiera</span>
+            <img src='/logo.svg' className='w-40'/>
           </Link>
           
           {/* Desktop Navigation */}

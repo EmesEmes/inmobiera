@@ -1,4 +1,3 @@
-// components/PropertyFilters.js
 'use client'
 import { Search, SlidersHorizontal, X } from 'lucide-react'
 
@@ -17,6 +16,10 @@ export default function PropertyFilters({ filters, setFilters, onSearch, onReset
     { value: '', label: 'Todos los tipos' },
     { value: 'casa', label: 'Casa' },
     { value: 'departamento', label: 'Departamento' },
+    { value: 'quinta', label: 'Quinta' },
+    { value: 'edificio', label: 'Edificio' },
+    { value: 'suite', label: 'Suite' },
+    { value: 'hosteria', label: 'Hostería / Hotel' },
     { value: 'terreno', label: 'Terreno' },
     { value: 'oficina', label: 'Oficina' },
     { value: 'local', label: 'Local Comercial' },

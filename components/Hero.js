@@ -22,7 +22,7 @@ export default function Hero() {
 
   return (
     <div className="relative bg-linear-to-r from-primary-900 to-primary-700 text-white">
-      <div className="max-w-7xl h-130 mx-auto px-4 sm:px-6 lg:px-8 py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
         <div className="text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
             Encuentra tu hogar ideal en Ecuador
@@ -60,6 +60,10 @@ export default function Hero() {
                   <option value="">Tipo de inmueble</option>
                   <option value="casa">Casa</option>
                   <option value="departamento">Departamento</option>
+                  <option value="quinta">Quinta</option>
+                  <option value="edificio">Edificio</option>
+                  <option value="suite">Suite</option>
+                  <option value="hosteria">Hostería / Hotel</option>
                   <option value="terreno">Terreno</option>
                   <option value="oficina">Oficina</option>
                   <option value="local">Local Comercial</option>
@@ -78,12 +82,7 @@ export default function Hero() {
         </div>
       </div>
       
-      {/* Decorative wave */}
-      <div className="absolute bottom-0 left-0 right-0">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120">
-          <path fill="#ffffff" fillOpacity="1" d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,43,1280,53,1360,58.7L1440,64L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"></path>
-        </svg>
-      </div>
+      
     </div>
   )
 }

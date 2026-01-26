@@ -32,6 +32,9 @@ export default function EditarPropiedadPage() {
     parqueaderos: "",
     amoblado: false,
     destacado: false,
+    aplica_credito_vip: false,
+    vendida: false,
+    fecha_venta: "",
     amenidades: "",
     imagenes: [],
   });
@@ -72,6 +75,9 @@ export default function EditarPropiedadPage() {
             parqueaderos: data.parqueaderos || "",
             amoblado: data.amoblado || false,
             destacado: data.destacado || false,
+            aplica_credito_vip: data.aplica_credito_vip || false,
+            vendida: data.vendida || false,
+            fecha_venta: data.fecha_venta || "",
             amenidades: data.amenidades ? data.amenidades.join(", ") : "",
             imagenes: data.imagenes || [],
           });
@@ -121,6 +127,9 @@ export default function EditarPropiedadPage() {
           parqueaderos: data.parqueaderos || "",
           amoblado: data.amoblado || false,
           destacado: data.destacado || false,
+          aplica_credito_vip: formData.aplica_credito_vip,
+          vendida: data.vendida || false,
+          fecha_venta: data.fecha_venta || "",
           amenidades: data.amenidades ? data.amenidades.join(", ") : "",
           imagenes: data.imagenes || [],
         });
@@ -263,6 +272,9 @@ export default function EditarPropiedadPage() {
           : null,
         amoblado: formData.amoblado,
         destacado: formData.destacado,
+        aplica_credito_vip: formData.aplica_credito_vip,
+        vendida: formData.vendida || false,
+        fecha_venta: formData.fecha_venta || "",
         amenidades: amenidadesArray,
         imagenes: allImages,
       };
@@ -386,6 +398,10 @@ export default function EditarPropiedadPage() {
                 >
                   <option value="casa">Casa</option>
                   <option value="departamento">Departamento</option>
+                  <option value="quinta">Quinta</option>
+                  <option value="edificio">Edificio</option>
+                  <option value="suite">Suite</option>
+                  <option value="hosteria">Hostería / Hotel</option>
                   <option value="terreno">Terreno</option>
                   <option value="oficina">Oficina</option>
                   <option value="local">Local Comercial</option>
@@ -631,6 +647,44 @@ export default function EditarPropiedadPage() {
                     Propiedad Destacada
                   </span>
                 </label>
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    name="aplica_credito_vip"
+                    checked={formData.aplica_credito_vip}
+                    onChange={handleInputChange}
+                    className="w-4 h-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                  />
+                  <span className="text-sm font-medium text-gray-700">
+                    Aplica para Crédito VIP
+                  </span>
+                </label>
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    name="vendida"
+                    checked={formData.vendida}
+                    onChange={handleInputChange}
+                    className="w-4 h-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                  />
+                  <span className="text-sm font-medium text-gray-700">
+                    Propiedad Vendida
+                  </span>
+                </label>
+                {formData.vendida && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Fecha de Venta
+                    </label>
+                    <input
+                      type="date"
+                      name="fecha_venta"
+                      value={formData.fecha_venta}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </div>

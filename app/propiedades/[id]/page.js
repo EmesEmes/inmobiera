@@ -1,28 +1,37 @@
 // app/propiedades/[id]/page.js
-'use client'
-import { useState } from 'react'
-import { useParams, useSearchParams, useRouter } from 'next/navigation'
-import { usePropiedad } from '@/lib/queries'
-import Navbar from '@/components/Navbar'
-import MapaPropiedad from '@/components/MapaPropiedad'
-import Image from 'next/image'
-import Link from 'next/link'
-import { 
-  MapPin, Bed, Bath, Car, Maximize, Calendar, Home, 
-  MessageCircle, ArrowLeft, Loader2, CheckCircle2 
-} from 'lucide-react'
+"use client";
+import { useState } from "react";
+import { useParams, useSearchParams, useRouter } from "next/navigation";
+import { usePropiedad } from "@/lib/queries";
+import Navbar from "@/components/Navbar";
+import MapaPropiedad from "@/components/MapaPropiedad";
+import Image from "next/image";
+import Link from "next/link";
+import {
+  MapPin,
+  Bed,
+  Bath,
+  Car,
+  Maximize,
+  Calendar,
+  Home,
+  MessageCircle,
+  ArrowLeft,
+  Loader2,
+  CheckCircle2,
+} from "lucide-react";
 
 export default function PropiedadDetalle() {
-  const params = useParams()
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const [imagenActual, setImagenActual] = useState(0)
+  const params = useParams();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [imagenActual, setImagenActual] = useState(0);
 
-  const whatsappNumber = "593999999999" // Cambia por tu número real
+  const whatsappNumber = "593999999999"; // Cambia por tu número real
 
-  const fromUrl = searchParams.get('from') || '/propiedades'
+  const fromUrl = searchParams.get("from") || "/propiedades";
   // Usar TanStack Query
-  const { data: propiedad, isLoading, error } = usePropiedad(params.id)
+  const { data: propiedad, isLoading, error } = usePropiedad(params.id);
 
   if (isLoading) {
     return (
@@ -32,7 +41,7 @@ export default function PropiedadDetalle() {
           <Loader2 className="h-12 w-12 animate-spin text-primary-600" />
         </div>
       </main>
-    )
+    );
   }
 
   if (error || !propiedad) {
@@ -43,7 +52,7 @@ export default function PropiedadDetalle() {
           <h1 className="text-2xl font-bold text-gray-900 mb-4">
             Propiedad no encontrada
           </h1>
-          <Link 
+          <Link
             href={fromUrl}
             className="flex items-center text-primary-600 hover:text-primary-700 font-semibold"
           >
@@ -52,15 +61,15 @@ export default function PropiedadDetalle() {
           </Link>
         </div>
       </main>
-    )
+    );
   }
 
-  const whatsappMessage = `Hola, estoy interesado en la propiedad ${propiedad.titulo} - ${propiedad.codigo_propiedad} con precio $${propiedad.precio.toLocaleString()}`
+  const whatsappMessage = `Hola, estoy interesado en la propiedad ${propiedad.titulo} - ${propiedad.codigo_propiedad} con precio $${propiedad.precio.toLocaleString()}`;
 
   return (
     <main>
       <Navbar />
-      
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumb */}
         <div className="mb-6">
@@ -81,9 +90,11 @@ export default function PropiedadDetalle() {
               {/* Imagen Principal */}
               <div className="relative h-96 md:h-[500px] rounded-lg overflow-hidden mb-4">
                 <img
-                  src={propiedad.imagenes && propiedad.imagenes[imagenActual] 
-                    ? propiedad.imagenes[imagenActual] 
-                    : '/placeholder-property.jpg'}
+                  src={
+                    propiedad.imagenes && propiedad.imagenes[imagenActual]
+                      ? propiedad.imagenes[imagenActual]
+                      : "/placeholder-property.jpg"
+                  }
                   alt={propiedad.titulo}
                   className="object-cover"
                 />
@@ -97,9 +108,9 @@ export default function PropiedadDetalle() {
                       key={index}
                       onClick={() => setImagenActual(index)}
                       className={`relative h-20 rounded-lg overflow-hidden ${
-                        imagenActual === index 
-                          ? 'ring-4 ring-primary-600' 
-                          : 'opacity-70 hover:opacity-100'
+                        imagenActual === index
+                          ? "ring-4 ring-primary-600"
+                          : "opacity-70 hover:opacity-100"
                       }`}
                     >
                       <img
@@ -123,8 +134,8 @@ export default function PropiedadDetalle() {
                   <div className="flex items-center text-gray-600">
                     <MapPin className="h-5 w-5 mr-2" />
                     <span className="capitalize">
-                      {propiedad.mostrar_direccion 
-                        ? propiedad.direccion 
+                      {propiedad.mostrar_direccion
+                        ? propiedad.direccion
                         : `${propiedad.sector}, Quito`}
                     </span>
                   </div>
@@ -139,6 +150,14 @@ export default function PropiedadDetalle() {
               <div className="text-3xl font-bold text-primary-600 mb-6">
                 ${propiedad.precio.toLocaleString()}
               </div>
+              {propiedad.aplica_credito_vip && (
+                <div className="mb-6">
+                  <div className="inline-flex items-center bg-green-100 text-green-800 px-4 py-2 rounded-full font-semibold">
+                    <CheckCircle2 className="h-5 w-5 mr-2" />
+                    Aplica para Crédito VIP
+                  </div>
+                </div>
+              )}
 
               {/* Características Principales */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pb-6 border-b">
@@ -147,7 +166,9 @@ export default function PropiedadDetalle() {
                     <Bed className="h-6 w-6 text-primary-600" />
                     <div>
                       <div className="text-sm text-gray-600">Habitaciones</div>
-                      <div className="font-semibold">{propiedad.habitaciones}</div>
+                      <div className="font-semibold">
+                        {propiedad.habitaciones}
+                      </div>
                     </div>
                   </div>
                 )}
@@ -167,7 +188,9 @@ export default function PropiedadDetalle() {
                     <Car className="h-6 w-6 text-primary-600" />
                     <div>
                       <div className="text-sm text-gray-600">Parqueaderos</div>
-                      <div className="font-semibold">{propiedad.parqueaderos}</div>
+                      <div className="font-semibold">
+                        {propiedad.parqueaderos}
+                      </div>
                     </div>
                   </div>
                 )}
@@ -177,7 +200,9 @@ export default function PropiedadDetalle() {
                     <Maximize className="h-6 w-6 text-primary-600" />
                     <div>
                       <div className="text-sm text-gray-600">Área Total</div>
-                      <div className="font-semibold">{propiedad.area_total}m²</div>
+                      <div className="font-semibold">
+                        {propiedad.area_total}m²
+                      </div>
                     </div>
                   </div>
                 )}
@@ -199,42 +224,54 @@ export default function PropiedadDetalle() {
               <h2 className="text-xl font-bold text-gray-900 mb-4">
                 Detalles de la Propiedad
               </h2>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex justify-between py-3 border-b">
                   <span className="text-gray-600">Código:</span>
-                  <span className="font-semibold">{propiedad.codigo_propiedad}</span>
+                  <span className="font-semibold">
+                    {propiedad.codigo_propiedad}
+                  </span>
                 </div>
 
                 <div className="flex justify-between py-3 border-b">
                   <span className="text-gray-600">Tipo:</span>
-                  <span className="font-semibold capitalize">{propiedad.tipo_inmueble}</span>
+                  <span className="font-semibold capitalize">
+                    {propiedad.tipo_inmueble}
+                  </span>
                 </div>
 
                 {propiedad.area_util && (
                   <div className="flex justify-between py-3 border-b">
                     <span className="text-gray-600">Área Útil:</span>
-                    <span className="font-semibold">{propiedad.area_util}m²</span>
+                    <span className="font-semibold">
+                      {propiedad.area_util}m²
+                    </span>
                   </div>
                 )}
 
                 {propiedad.anio_construccion && (
                   <div className="flex justify-between py-3 border-b">
                     <span className="text-gray-600">Año de Construcción:</span>
-                    <span className="font-semibold">{propiedad.anio_construccion}</span>
+                    <span className="font-semibold">
+                      {propiedad.anio_construccion}
+                    </span>
                   </div>
                 )}
 
                 {propiedad.medios_banios > 0 && (
                   <div className="flex justify-between py-3 border-b">
                     <span className="text-gray-600">Medios Baños:</span>
-                    <span className="font-semibold">{propiedad.medios_banios}</span>
+                    <span className="font-semibold">
+                      {propiedad.medios_banios}
+                    </span>
                   </div>
                 )}
 
                 <div className="flex justify-between py-3 border-b">
                   <span className="text-gray-600">Amoblado:</span>
-                  <span className="font-semibold">{propiedad.amoblado ? 'Sí' : 'No'}</span>
+                  <span className="font-semibold">
+                    {propiedad.amoblado ? "Sí" : "No"}
+                  </span>
                 </div>
               </div>
             </div>
@@ -249,7 +286,9 @@ export default function PropiedadDetalle() {
                   {propiedad.amenidades.map((amenidad, index) => (
                     <div key={index} className="flex items-center space-x-2">
                       <CheckCircle2 className="h-5 w-5 text-green-500" />
-                      <span className="text-gray-700 capitalize">{amenidad}</span>
+                      <span className="text-gray-700 capitalize">
+                        {amenidad}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -268,8 +307,8 @@ export default function PropiedadDetalle() {
                   titulo={propiedad.titulo}
                 />
                 <p className="text-sm text-gray-500 mt-3">
-                  {propiedad.mostrar_direccion 
-                    ? propiedad.direccion 
+                  {propiedad.mostrar_direccion
+                    ? propiedad.direccion
                     : `Sector: ${propiedad.sector}`}
                 </p>
               </div>
@@ -282,9 +321,10 @@ export default function PropiedadDetalle() {
               <h3 className="text-xl font-bold text-gray-900 mb-4">
                 ¿Te interesa esta propiedad?
               </h3>
-              
+
               <p className="text-gray-600 mb-6">
-                Contáctanos por WhatsApp para más información y para agendar una visita.
+                Contáctanos por WhatsApp para más información y para agendar una
+                visita.
               </p>
 
               <a
@@ -316,5 +356,5 @@ export default function PropiedadDetalle() {
         </div>
       </footer>
     </main>
-  )
+  );
 }
