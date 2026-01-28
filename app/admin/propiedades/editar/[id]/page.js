@@ -77,7 +77,7 @@ export default function EditarPropiedadPage() {
             destacado: data.destacado || false,
             aplica_credito_vip: data.aplica_credito_vip || false,
             vendida: data.vendida || false,
-            fecha_venta: data.fecha_venta || "",
+            fecha_venta: data.fecha_venta || null,
             amenidades: data.amenidades ? data.amenidades.join(", ") : "",
             imagenes: data.imagenes || [],
           });
@@ -129,7 +129,7 @@ export default function EditarPropiedadPage() {
           destacado: data.destacado || false,
           aplica_credito_vip: formData.aplica_credito_vip,
           vendida: data.vendida || false,
-          fecha_venta: data.fecha_venta || "",
+          fecha_venta: data.fecha_venta || null,
           amenidades: data.amenidades ? data.amenidades.join(", ") : "",
           imagenes: data.imagenes || [],
         });
@@ -274,7 +274,7 @@ export default function EditarPropiedadPage() {
         destacado: formData.destacado,
         aplica_credito_vip: formData.aplica_credito_vip,
         vendida: formData.vendida || false,
-        fecha_venta: formData.fecha_venta || "",
+        fecha_venta: formData.fecha_venta || null,
         amenidades: amenidadesArray,
         imagenes: allImages,
       };

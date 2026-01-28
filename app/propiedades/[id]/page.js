@@ -336,14 +336,6 @@ export default function PropiedadDetalle() {
                 <MessageCircle className="h-6 w-6" />
                 Contactar por WhatsApp
               </a>
-
-              <div className="bg-gray-50 rounded-lg p-4 text-sm text-gray-600">
-                <p className="mb-2">
-                  <strong>Horario de atención:</strong>
-                </p>
-                <p>Lunes a Viernes: 9:00 AM - 6:00 PM</p>
-                <p>Sábados: 9:00 AM - 2:00 PM</p>
-              </div>
             </div>
           </div>
         </div>
