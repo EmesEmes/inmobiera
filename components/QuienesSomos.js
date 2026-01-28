@@ -1,5 +1,5 @@
 // components/QuienesSomos.js
-import { Award, Users, Home, TrendingUp } from 'lucide-react'
+import { Award, Users, Home, TrendingUp, Phone, MapPinned, Mail } from 'lucide-react'
 
 export default function QuienesSomos() {
   const stats = [
@@ -59,8 +59,26 @@ export default function QuienesSomos() {
           </div>
         </div>
       </div>
-      <div className='size-[50%] mx-auto mt-10'>
+      <div className='grid grid-cols-2 max-w-7xl mx-auto mt-10 gap-2'>
+        <div >
         <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d997.4485719791038!2d-78.4859497!3d-0.1988658!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91d59bae67b0d60d%3A0xadb7197bac85d10f!2sEsteban%20Donoso%20y%20Asociados!5e0!3m2!1ses!2sec!4v1764379408770!5m2!1ses!2sec" width="100%" height="350"  allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+      <div className='p-4 text-primary-900 rounded-2xl'>
+        <h3 className='text-center text-3xl mb-6'>Contactos</h3>
+        <div className='gap-2 mb-6 flex flex-col items-center'>
+          <span className='flex font-bold'> <Phone className='mr-3'/> Teléfono</span>
+          <p>0987654321</p>
+        </div>
+        <div className='gap-2 mb-6 flex flex-col items-center'>
+          <span className='flex font-bold'> <Mail className='mr-3'/> Email</span>
+          <p>emaildejemplo@mail.com</p>
+        </div>
+        <div className='gap-2 mb-6 flex flex-col items-center'>
+          <span className='flex font-bold'> <MapPinned className='mr-3'/> Direccion</span>
+          <p>Yánez Pinzón y Av. Francisco de Orellana</p>
+          <p>Edificio Pinzón</p>
+        </div>            
+      </div>
       </div>
     </section>
   )
