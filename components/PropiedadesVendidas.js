@@ -1,10 +1,18 @@
-'use client'
-import { usePropiedadesVendidas } from '@/lib/queries'
-import Image from 'next/image'
-import { MapPin, Bed, Bath, Car, Maximize, CheckCircle2, Loader2 } from 'lucide-react'
+"use client";
+import { usePropiedadesVendidas } from "@/lib/queries";
+import Image from "next/image";
+import {
+  MapPin,
+  Bed,
+  Bath,
+  Car,
+  Maximize,
+  CheckCircle2,
+  Loader2,
+} from "lucide-react";
 
 export default function PropiedadesVendidas() {
-  const { data: propiedades = [], isLoading } = usePropiedadesVendidas()
+  const { data: propiedades = [], isLoading } = usePropiedadesVendidas();
 
   if (isLoading) {
     return (
@@ -15,11 +23,11 @@ export default function PropiedadesVendidas() {
           </div>
         </div>
       </section>
-    )
+    );
   }
 
   if (propiedades.length === 0) {
-    return null
+    return null;
   }
 
   return (
@@ -36,8 +44,8 @@ export default function PropiedadesVendidas() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {propiedades.map((propiedad) => (
-            <div 
-              key={propiedad.id} 
+            <div
+              key={propiedad.id}
               className="bg-white rounded-lg shadow-lg overflow-hidden relative"
             >
               {/* Badge de Vendido */}
@@ -49,9 +57,11 @@ export default function PropiedadesVendidas() {
               {/* Imagen con overlay */}
               <div className="relative h-64 w-full overflow-hidden">
                 <img
-                  src={propiedad.imagenes && propiedad.imagenes.length > 0 
-                    ? propiedad.imagenes[0] 
-                    : '/placeholder-property.jpg'}
+                  src={
+                    propiedad.imagenes && propiedad.imagenes.length > 0
+                      ? propiedad.imagenes[0]
+                      : "/placeholder-property.jpg"
+                  }
                   alt={propiedad.titulo}
                   className="object-cover opacity-90"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -59,14 +69,14 @@ export default function PropiedadesVendidas() {
                 {/* Overlay sutil */}
                 <div className="absolute inset-0 bg-green-900/10"></div>
               </div>
-              
+
               {/* Contenido */}
               <div className="p-6">
                 <div className="flex items-center text-gray-600 text-sm mb-2">
                   <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
                   <span className="capitalize">{propiedad.sector}</span>
                 </div>
-                
+
                 <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2">
                   {propiedad.titulo}
                 </h3>
@@ -74,13 +84,17 @@ export default function PropiedadesVendidas() {
                 {/* Fecha de venta */}
                 {propiedad.fecha_venta && (
                   <p className="text-sm text-green-600 font-semibold mb-3">
-                    Vendida en {new Date(propiedad.fecha_venta).toLocaleDateString('es-EC', { 
-                      year: 'numeric', 
-                      month: 'long' 
-                    })}
+                    Vendida en{" "}
+                    {new Date(propiedad.fecha_venta).toLocaleDateString(
+                      "es-EC",
+                      {
+                        year: "numeric",
+                        month: "long",
+                      },
+                    )}
                   </p>
                 )}
-                
+
                 {/* Características */}
                 <div className="flex items-center justify-between text-gray-700 pt-4 border-t">
                   {propiedad.habitaciones ? (
@@ -91,7 +105,7 @@ export default function PropiedadesVendidas() {
                   ) : (
                     <div className="w-8"></div>
                   )}
-                  
+
                   {propiedad.banios ? (
                     <div className="flex items-center space-x-1">
                       <Bath className="h-5 w-5 text-primary-600 flex-shrink-0" />
@@ -100,7 +114,7 @@ export default function PropiedadesVendidas() {
                   ) : (
                     <div className="w-8"></div>
                   )}
-                  
+
                   {propiedad.parqueaderos ? (
                     <div className="flex items-center space-x-1">
                       <Car className="h-5 w-5 text-primary-600 flex-shrink-0" />
@@ -109,7 +123,7 @@ export default function PropiedadesVendidas() {
                   ) : (
                     <div className="w-8"></div>
                   )}
-                  
+
                   {propiedad.area_total ? (
                     <div className="flex items-center space-x-1">
                       <Maximize className="h-5 w-5 text-primary-600 flex-shrink-0" />
@@ -130,7 +144,7 @@ export default function PropiedadesVendidas() {
             ¿Quieres ser parte de nuestras historias de éxito?
           </p>
           <a
-            href={`https://wa.me/593999999999?text=${encodeURIComponent('Hola, me gustaría información sobre sus propiedades disponibles')}`}
+            href={`https://wa.me/593994932264?text=${encodeURIComponent("Hola, me gustaría información sobre sus propiedades disponibles")}`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center bg-primary-600 text-white px-8 py-3 rounded-lg hover:bg-primary-700 transition font-semibold"
@@ -140,5 +154,5 @@ export default function PropiedadesVendidas() {
         </div>
       </div>
     </section>
-  )
+  );
 }

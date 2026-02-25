@@ -15,7 +15,7 @@ import {
 
 export default function PropertyCard({ propiedad }) {
   const searchParams = useSearchParams();
-  const whatsappNumber = "593999999999"; // Cambia por tu número real
+  const whatsappNumber = "593994932264"; // Cambia por tu número real
   const whatsappMessage = `Hola, estoy interesado en la propiedad ${propiedad.titulo} - ${propiedad.codigo_propiedad} con precio $${propiedad.precio.toLocaleString()}`;
 
   // Obtener la primera imagen o usar placeholder

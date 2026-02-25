@@ -27,7 +27,7 @@ export default function PropiedadDetalle() {
   const searchParams = useSearchParams();
   const [imagenActual, setImagenActual] = useState(0);
 
-  const whatsappNumber = "593999999999"; // Cambia por tu número real
+  const whatsappNumber = "593994932264"; // Cambia por tu número real
 
   const fromUrl = searchParams.get("from") || "/propiedades";
   // Usar TanStack Query

@@ -1,13 +1,21 @@
 // components/QuienesSomos.js
-import { Award, Users, Home, TrendingUp, Phone, MapPinned, Mail } from 'lucide-react'
+import {
+  Award,
+  Users,
+  Home,
+  TrendingUp,
+  Phone,
+  MapPinned,
+  Mail,
+} from "lucide-react";
 
 export default function QuienesSomos() {
   const stats = [
-    { icon: Home, value: '500+', label: 'Propiedades Vendidas' },
-    { icon: Users, value: '1000+', label: 'Clientes Satisfechos' },
-    { icon: Award, value: '15+', label: 'Años de Experiencia' },
-    { icon: TrendingUp, value: '98%', label: 'Tasa de Éxito' },
-  ]
+    { icon: Home, value: "500+", label: "Propiedades Vendidas" },
+    { icon: Users, value: "1000+", label: "Clientes Satisfechos" },
+    { icon: Award, value: "15+", label: "Años de Experiencia" },
+    { icon: TrendingUp, value: "98%", label: "Tasa de Éxito" },
+  ];
 
   return (
     <section className="py-16 bg-white">
@@ -19,28 +27,30 @@ export default function QuienesSomos() {
               ¿Quiénes Somos?
             </h2>
             <p className="text-gray-600 text-lg mb-6">
-              Somos una empresa inmobiliaria líder en Ecuador, especializada en la venta de 
-              propiedades residenciales y comerciales en Quito y sus valles. Con más de 15 años 
-              de experiencia en el mercado, nos comprometemos a ayudarte a encontrar el hogar 
-              de tus sueños.
+              Somos una empresa inmobiliaria líder en Ecuador, especializada en
+              la venta de propiedades residenciales y comerciales en Quito y sus
+              valles. Con más de 15 años de experiencia en el mercado, nos
+              comprometemos a ayudarte a encontrar el hogar de tus sueños.
             </p>
             <p className="text-gray-600 text-lg mb-6">
-              Nuestro equipo de profesionales altamente capacitados trabaja con dedicación para 
-              ofrecerte un servicio personalizado, transparente y eficiente en cada paso del proceso 
-              de compra o venta de tu propiedad.
+              Nuestro equipo de profesionales altamente capacitados trabaja con
+              dedicación para ofrecerte un servicio personalizado, transparente
+              y eficiente en cada paso del proceso de compra o venta de tu
+              propiedad.
             </p>
             <p className="text-gray-600 text-lg">
-              Nos enfocamos en construir relaciones duraderas con nuestros clientes, basadas en 
-              la confianza, la honestidad y el compromiso con la excelencia.
+              Nos enfocamos en construir relaciones duraderas con nuestros
+              clientes, basadas en la confianza, la honestidad y el compromiso
+              con la excelencia.
             </p>
           </div>
 
           {/* Estadísticas */}
           <div className="grid grid-cols-2 gap-6">
             {stats.map((stat, index) => {
-              const Icon = stat.icon
+              const Icon = stat.icon;
               return (
-                <div 
+                <div
                   key={index}
                   className="bg-primary-50 rounded-lg p-6 text-center hover:shadow-lg transition-shadow"
                 >
@@ -50,36 +60,50 @@ export default function QuienesSomos() {
                   <div className="text-3xl font-bold text-primary-900 mb-2">
                     {stat.value}
                   </div>
-                  <div className="text-gray-600 text-sm">
-                    {stat.label}
-                  </div>
+                  <div className="text-gray-600 text-sm">{stat.label}</div>
                 </div>
-              )
+              );
             })}
           </div>
         </div>
       </div>
-      <div className='grid grid-cols-2 max-w-7xl mx-auto mt-10 gap-2'>
-        <div >
-        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d997.4485719791038!2d-78.4859497!3d-0.1988658!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91d59bae67b0d60d%3A0xadb7197bac85d10f!2sEsteban%20Donoso%20y%20Asociados!5e0!3m2!1ses!2sec!4v1764379408770!5m2!1ses!2sec" width="100%" height="350"  allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
-      </div>
-      <div className='p-4 text-primary-900 rounded-2xl'>
-        <h3 className='text-center text-3xl mb-6'>Contactos</h3>
-        <div className='gap-2 mb-6 flex flex-col items-center'>
-          <span className='flex font-bold'> <Phone className='mr-3'/> Teléfono</span>
-          <p>0987654321</p>
+      <div className="grid grid-cols-2 max-w-7xl mx-auto mt-10 gap-2">
+        <div>
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d997.4485719791038!2d-78.4859497!3d-0.1988658!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91d59bae67b0d60d%3A0xadb7197bac85d10f!2sEsteban%20Donoso%20y%20Asociados!5e0!3m2!1ses!2sec!4v1764379408770!5m2!1ses!2sec"
+            width="100%"
+            height="350"
+            allowFullScreen=""
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          ></iframe>
         </div>
-        <div className='gap-2 mb-6 flex flex-col items-center'>
-          <span className='flex font-bold'> <Mail className='mr-3'/> Email</span>
-          <p>emaildejemplo@mail.com</p>
+        <div className="p-4 text-primary-900 rounded-2xl">
+          <h3 className="text-center text-3xl mb-6">Contactos</h3>
+          <div className="gap-2 mb-6 flex flex-col items-center">
+            <span className="flex font-bold">
+              {" "}
+              <Phone className="mr-3" /> Teléfono
+            </span>
+            <p> 099 493 2264</p>
+          </div>
+          <div className="gap-2 mb-6 flex flex-col items-center">
+            <span className="flex font-bold">
+              {" "}
+              <Mail className="mr-3" /> Email
+            </span>
+            <p>inmobieraec@gmail.com</p>
+          </div>
+          <div className="gap-2 mb-6 flex flex-col items-center">
+            <span className="flex font-bold">
+              {" "}
+              <MapPinned className="mr-3" /> Direccion
+            </span>
+            <p>Yánez Pinzón y Av. Francisco de Orellana</p>
+            <p>Edificio Pinzón</p>
+          </div>
         </div>
-        <div className='gap-2 mb-6 flex flex-col items-center'>
-          <span className='flex font-bold'> <MapPinned className='mr-3'/> Direccion</span>
-          <p>Yánez Pinzón y Av. Francisco de Orellana</p>
-          <p>Edificio Pinzón</p>
-        </div>            
-      </div>
       </div>
     </section>
-  )
+  );
 }
